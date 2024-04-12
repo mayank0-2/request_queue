@@ -26,5 +26,6 @@ class Command(BaseCommand):
     @shared_task
     def push_task_to_celery(self, task):
         task.processed = True
+        
         #Task execution will take place here
         task.save()

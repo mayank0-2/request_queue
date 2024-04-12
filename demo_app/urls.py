@@ -17,9 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.urls import include
-from demo_app import urls as demo_urls
+from demo_app.views import process_data
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/', include(demo_urls))
+    path('push_data/', process_data, name="process data")
 ]
