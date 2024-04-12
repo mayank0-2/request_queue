@@ -18,7 +18,9 @@ from django.contrib import admin
 from django.urls import path
 from django.urls import include
 from demo_app.views import process_data
+from demo_app.process_tasks import Command
 
 urlpatterns = [
-    path('push_data/', process_data, name="process data")
+    path('push_data', process_data, name="process data"),
+    path('invoke_system', Command, name="invoke system"),
 ]
