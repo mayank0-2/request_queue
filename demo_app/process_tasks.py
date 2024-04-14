@@ -12,24 +12,26 @@ def Command(request):
         def handle(self, *args, **options):
             while True:
                 # Get the next unprocessed task
-                task = Task.objects.filter(processed=False).order_by('id').first()
+                task = Task.objects.filter(processed=False, status=0).order_by('id').first()
                 if task:
-                    # Process the task (In this example, we'll just print the data)
                     print("Processing task:", task.data)
                     # Mark the task as processed
-                    # task.processed = True
-                    # task.save()
                     self.push_task_to_celery.delay(task)
+                    time.sleep(1)
+
+                    # Marking the task true after processing since the time limit is breached
+                    if not task.processed:
+                        task.status = 1
+                        task.save()
+
                     print('Pushed task to celery queue')
                 else:
                     # If no tasks are found, wait for a while before checking again
                     pass
         return JsonResponse({'message': 'System Invoked'})
 
-
-    @shared_task
+    @shared_task(time_limit=1)
     def push_task_to_celery(self, task):
+        # Task execution will take place here
         task.processed = True
-        
-        #Task execution will take place here
         task.save()
